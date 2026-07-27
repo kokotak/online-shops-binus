@@ -66,12 +66,9 @@ const authenticateToken = (req, res, next) => {
 // Fungsi untuk menyalakan database di memori dan mengisi data awal
 const startDatabase = async () => {
   try {
-    const mongoServer = await MongoMemoryServer.create();
-    const mongoUri = mongoServer.getUri();
-
-    await mongoose.connect(mongoUri);
-    console.log('✅ Berhasil terhubung ke Database Memori Sementara!');
-
+        const mongoUri = process.env.MONGO_URL || (await MongoMemoryServer.create()).getUri();
+        await mongoose.connect(mongoUri);
+        console.log(process.env.MONGO_URL ? '    console.log(process.env.MONGO_URL ? 'Connected to MongoDB!' : 'Connected to temporary memory database!');
     // Masukkan data dummy jika database kosong
     const count = await Product.countDocuments();
     if (count === 0) {
